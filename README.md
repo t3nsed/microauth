@@ -1,10 +1,12 @@
 # MicroAuth
 
-MicroAuth is an ultra-low-level in-memory auth server that makes OAuth2 authentication as simple as working with your database by providing a ORM-like API. Built on top of `ring` crate with BoringSSL bindings.
+MicroAuth is an ultra-low-level in-memory auth server. It makes OAuth2 authentication in a breeze by providing a ORM-like API. Built on top of `ring` crate with BoringSSL bindings.
 
 ## Design Philosophy
 
-For a lot of prod usecases it's not necessary to have a separate auth server because a single high-performance webserver can handle all tasks and can do all auth in-memory. Crypto implementations such as `ring` are extremely fast but if hidden behind a slow sso portal such as auth0, google etc. might be perceived as sluggish due to >1sec loadtimes.
+For a lot of prod usecases it's not necessary to have a separate auth server because a single high-performance webserver can handle all requests and do all auth in-memory. Crypto implementations such as those in `ring` are extremely fast but if hidden behind a slow sso portal such as auth0, google etc. might be perceived as sluggish due to >1sec loadtimes.
+
+db analogy: in-memory sqlite over hosted postgres.
 
 ## Quick Start
 
@@ -208,24 +210,27 @@ App::new()
 
 ## Security
 
-MicroAuth handles all the security best practices for you:
+Some things MicroAuth handles for you (prob forgot something important):
 
-### Cryptographic Security
+### Crypto
 
 #### State Encryption
+
 - ChaCha20-Poly1305 AEAD encryption for all persistent data
-- Authenticated encryption prevents tampering
+- Authenticated encryption prevents memory tampering
 - Atomic file operations with backup support
 - Base64 URL-safe encoding for storage
 
 #### Key Management
+
 - Secure key generation and validation
 - Support for multiple active encryption keys
-- Key versioning and rotation capabilities
+- Key versioning and rotation
 - Safe removal of old keys
-- Automatic key derivation for different purposes
+- Automatic key derivation via zero-trust principle
 
 #### Key Rotation
+
 ```rust
 // Rotate to a new encryption key
 auth.storage()
@@ -239,13 +244,13 @@ auth.storage()
 ```
 
 #### Backup and Recovery
-- Automatic backup creation during saves
-- Encrypted backup files
-- Atomic writes prevent corruption
+
+- periodic, atomic, encrypted backup creation during saves
 - Fallback to backup on corruption
-- Multiple key support for recovery
+- Multi-key support for recovery (not exposed right now via api)
 
 ### Token Security
+
 - Secure token generation and validation
 - Automatic token expiration
 - Token revocation support
@@ -253,31 +258,21 @@ auth.storage()
 - Protection against replay attacks
 
 ### Access Control
+
 - Fine-grained scope management
 - Client authentication
 - Rate limiting
 - Token blacklisting
 - Concurrent access protection
 
-### Best Practices
+### Other
+
 - No unsafe code
 - Memory zeroing for sensitive data
 - Constant-time comparisons
 - Secure random number generation
 - Automatic cleanup of expired data
 
-## Performance
-
-- Minimal memory footprint
-- Fast in-memory token validation
-- Efficient state persistence
-- Automatic cleanup of expired tokens
-- Smart caching of frequently used data
-
-## Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
 ## License
 
-Licensed under either of Apache License, Version 2.0 or MIT license at your option. 
+MIT
