@@ -1,0 +1,59 @@
+[package]
+name = "microauth"
+version = "0.1.0"
+edition = "2021"
+description = "A developer-friendly authentication library that makes OAuth2 as easy as using an ORM"
+authors = ["Johann Hipp <me@jhipp.dev>"]
+license = "MIT"
+repository = "https://github.com/t3nsed/microauth"
+readme = "README.md"
+keywords = ["oauth2", "authentication", "auth", "security"]
+categories = ["authentication"]
+
+[features]
+default = ["persistence", "logging"]
+persistence = []
+logging = []
+framework-axum = ["axum"]
+framework-actix = ["actix-web"]
+
+[dependencies]
+tokio = { version = "1.36", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+ring = "0.17"
+base64 = "0.21"
+nanoid = "0.4"
+sha2 = "0.10"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+time = { version = "0.3", features = ["serde"] }
+urlencoding = "2.1"
+async-trait = "0.1"
+
+# just for some tests
+axum = { version = "0.7", optional = true }
+actix-web = { version = "4.5", optional = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
+pretty_assertions = "1.4"
+test-log = "0.2"
+tracing-test = "0.2"
+tempfile = "3.10"
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "deny"
+unreachable_pub = "deny"
+unused_crate_dependencies = "deny"
+
+[lints.clippy]
+pedantic = "deny"
+nursery = "warn"
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+integer_arithmetic = "deny"
+float_arithmetic = "deny"
